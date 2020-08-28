@@ -25,6 +25,9 @@ ALWAYS=\
 	c2l\
 	mkppcimage\
 	nm\
+	za\
+	zc\
+	zl\
 
 #
 #	Utils we build on Posix and Nt, which already exist on Plan 9.
