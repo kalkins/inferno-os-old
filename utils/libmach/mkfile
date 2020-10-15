@@ -11,12 +11,14 @@ OFILES=\
 	q.$O\
 	t.$O\
 	v.$O\
+	z.$O\
 	5db.$O\
 	8db.$O\
 	kdb.$O\
 	qdb.$O\
 	tdb.$O\
 	vdb.$O\
+	zdb.$O\
 	5obj.$O\
 	6obj.$O\
 	8obj.$O\
@@ -24,6 +26,7 @@ OFILES=\
 	kobj.$O\
 	qobj.$O\
 	vobj.$O\
+	zobj.$O\
 	obj.$O\
 	map.$O\
 	swap.$O\
@@ -34,7 +37,7 @@ OFILES=\
 	executable.$O\
 	vcodas.$O\
 
-HFILES=../include/mach.h ../include/a.out.h bootexec.h elf.h ureg4.h ureg6.h ureg8.h uregk.h uregv.h ureg5.h
+HFILES=../include/mach.h ../include/a.out.h bootexec.h elf.h ureg4.h ureg6.h ureg8.h uregk.h uregv.h ureg5.h uregz.h
 
 <$ROOT/mkfiles/mksyslib-$SHELLTYPE
 CFLAGS= $CFLAGS -I../include -I..

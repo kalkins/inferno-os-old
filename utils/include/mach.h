@@ -16,6 +16,7 @@
  *		powerpc,
  *		powerpc64
  *		arm64
+ *		riscv
  */
 enum
 {
@@ -36,6 +37,7 @@ enum
 	MAMD64,
 	MPOWER64,
 	MARM64,
+	MRISCV,
 				/* types of executables */
 	FNONE = 0,		/* unidentified */
 	FMIPS,			/* v.out */
@@ -67,6 +69,8 @@ enum
 	FPOWER64B,		/* 9.out bootable */
 	FARM64,			/* arm64 */
 	FARM64B,		/* arm64 bootable */
+	FRISCV,			/* riscv */
+	FRISCVB,		/* riscv bootable */
 
 	ANONE = 0,		/* dissembler types */
 	AMIPS,
@@ -85,6 +89,7 @@ enum
 	AAMD64,
 	APOWER64,
 	AARM64,
+	ARISCV,
 				/* object file types */
 	Obj68020 = 0,		/* .2 */
 	ObjSparc,		/* .k */
@@ -103,6 +108,7 @@ enum
 	ObjSpim,		/* .0 */
 	ObjPower64,		/* .9 */
 	ObjArm64,		/* .4? */
+	ObjRiscv,		/* .z */
 	Maxobjtype,
 
 	CNONE  = 0,		/* symbol table classes */

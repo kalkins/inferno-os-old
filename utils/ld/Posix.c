@@ -75,9 +75,9 @@ cputime(void)
 	/*
 	 * Convert to seconds.
 	 */
-	ret_val *= sysconf(_SC_CLK_TCK);
+	ret_val /= sysconf(_SC_CLK_TCK);
 	return ret_val;
-	
+
 }
 
 int
