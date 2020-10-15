@@ -7,18 +7,15 @@
 enum
 {
 	REGZERO		= 0,	/* always zero */
-	REGRET		= 1,	/* fn return value */
-	REGARG		= 1,	/* fn arg value */
+	REGRET		= 10,	/* fn return value */
+	REGARG		= 10,	/* fn arg value */
 	REGEXT		= 24,	/* extern reg from here down */
-	REGBPTMP	= 25,	/* breakpoint temporary */
-	REGSB		= 26,	/* static base */
-	REGSP		= 27,	/* stack pointer */
+	REGSB		= 3,	/* static base */
+	REGSP		= 2,	/* stack pointer */
 	REGTMP		= 28,	/* assembler temporary */
-	REGEA		= 29,	/* exception return address */
-	REGBA		= 30,	/* breakpoint return address */
-	REGLINK		= 31,	/* call return address */
+	REGLINK		= 1,	/* call return address */
 
-	FREGRET		= 0,	/* fn return value */
+	FREGRET		= 10,	/* fn return value */
 	FREGEXT		= 27,	/* extern reg from here down */
 	FREGZERO	= 28,	/* always 0.0 */
 	FREGHALF	= 29,
@@ -142,6 +139,10 @@ enum	as
 	ADYNT,
 	AINIT,
 	ASIGNAME,
+
+	/* SBI */
+	AECALL,
+	AEBREAK,
 
 	ALAST,
 };

@@ -85,10 +85,6 @@ Dconv(Fmt *fp)
 	a = va_arg(fp->args, Adr*);
 	switch(a->type) {
 
-	default:
-		sprint(str, "GOK-type(%d)", a->type);
-		break;
-
 	case D_NONE:
 		str[0] = 0;
 		if(a->name != D_NONE || a->reg != NREG || a->sym != S)
@@ -131,6 +127,10 @@ Dconv(Fmt *fp)
 
 	case D_SCONST:
 		sprint(str, "$\"%S\"", a->sval);
+		break;
+
+	default:
+		sprint(str, "GOK-type(%d, %d)", a->type, a->name);
 		break;
 	}
 	return fmtstrcpy(fp, str);

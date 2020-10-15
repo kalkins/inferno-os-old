@@ -44,6 +44,9 @@ Optab	optab[] =
  /* jalr	*/	AJAL,		C_NONE,		C_SOREG,	5,	4,	OJALR,	0,	REGLINK,
  /* jalr	*/	AJMP,		C_NONE,		C_SOREG,	5,	4,	OJALR,	0,	REGZERO,
 
+ /* ecall	*/	AECALL,		C_NONE,		C_NONE,		0,	4,	OSYSTEM,	0,	0,
+ /* ebreak	*/	AEBREAK,	C_NONE,		C_NONE,		0,	4,	OSYSTEM,	0,	1,
+
  /* sb		*/	AMOVB,		C_REG,		C_SOREG,	6,	4,	OSTORE,	0,	0,
  /* sb		*/	AMOVBU,		C_REG,		C_SOREG,	6,	4,	OSTORE,	0,	0,
  /* sh		*/	AMOVH,		C_REG,		C_SOREG,	6,	4,	OSTORE,	1,	0,
@@ -55,7 +58,7 @@ Optab	optab[] =
  /* sh		*/	AMOVH,		C_REG,		C_LEXT,		12,	8,	OSTORE,	1,	0,
  /* sw		*/	AMOVW,		C_REG,		C_LEXT,		12,	8,	OSTORE,	2,	0,
  /* sw		*/	AMOVW,		C_ZCON,		C_LEXT,		12,	8,	OSTORE,	2,	0,
-			
+
  /* sb		*/	AMOVB,		C_REG,		C_LAUTO,		15,	12,	OSTORE,	0,	0,
  /* sb		*/	AMOVBU,		C_REG,		C_LAUTO,		15,	12,	OSTORE,	0,	0,
  /* sh		*/	AMOVH,		C_REG,		C_LAUTO,		15,	12,	OSTORE,	1,	0,
@@ -97,6 +100,7 @@ Optab	optab[] =
  /* int->float	*/	AMOVWD,		C_REG,		C_FREG,		24,	4,	Ocustom_2,	0,	1,
  /* float->int  */	AMOVDW,		C_FREG,		C_FREG,		24,	4,	Ocustom_2,	0,	1,
  /* float load	*/	AMOVD,		C_SOREG,	C_FREG,		24,	4,	Ocustom_2,	0,	1,
+ /* float load	*/	AMOVD,		C_LEXT,		C_FREG,		24,	4,	Ocustom_2,	0,	1,
  /* float store */	AMOVD,		C_FREG,		C_SOREG,	24,	4,	Ocustom_2,	0,	1,
  /* float store */	AMOVD,		C_FREG,		C_LEXT,	24,	4,	Ocustom_2,	0,	1,
  /* float move  */	AMOVD,		C_FREG,		C_FREG,	24,	4,	Ocustom_2,	0,	1,

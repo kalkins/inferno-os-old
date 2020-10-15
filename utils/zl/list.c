@@ -96,6 +96,12 @@ Dconv(Fmt *fp)
 			sprint(str, "%N(R%d)(REG)", a, a->reg);
 		break;
 
+	case D_FREG:
+		sprint(str, "F%d", a->reg);
+		if(a->name != D_NONE || a->sym != S)
+			sprint(str, "%N(R%d)(FREG)", a, a->reg);
+		break;
+
 	case D_CTLREG:
 		sprint(str, "CTL(%d)", a->reg);
 		if(a->name != D_NONE || a->sym != S)
@@ -234,6 +240,7 @@ diag(char *fmt, ...)
 	va_end(arg);
 	print("%s: %s\n", tn, buf);
 
+	return;
 	nerrors++;
 	if(nerrors > 10) {
 		print("too many errors\n");

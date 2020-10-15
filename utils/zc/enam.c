@@ -106,5 +106,7 @@ char*	anames[] =
 	"DYNT",
 	"INIT",
 	"SIGNAME",
+	"ECALL",
+	"EBREAK",
 	"LAST",
 };

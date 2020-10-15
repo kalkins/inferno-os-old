@@ -15,7 +15,7 @@
 %left	'<' '>'
 %left	'+' '-'
 %left	'*' '/' '%'
-%token	<lval>	LADD LMUL LBEQ LBR LBRET LCALL
+%token	<lval>	LADD LMUL LBEQ LBR LBRET LCALL LECALL LEBREAK
 %token	<lval>	LMOVB LMOVBU LMOVW LLUI LSYS LSWAP LAMO
 %token	<lval>	LCONST LSP LSB LFP LPC LREG LR LCTL
 %token	<lval>	LDATA LTEXT LWORD
@@ -113,6 +113,16 @@ inst:
 |	LCALL sreg ',' rel
 	{
 		outcode($1, &nullgen, $2, &$4);
+	}
+
+|	LECALL
+	{
+		outcode($1, &nullgen, NREG, &nullgen);
+	}
+
+|	LEBREAK
+	{
+		outcode($1, &nullgen, NREG, &nullgen);
 	}
 
 |	LMOVB addr ',' rreg

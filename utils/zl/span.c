@@ -90,7 +90,7 @@ span(void)
 	}
 
 	if(debug['t']) {
-		/* 
+		/*
 		 * add strings to text segment
 		 */
 		c = rnd(c, 8);
@@ -119,7 +119,7 @@ span(void)
 		Bprint(&bso, "tsize = %lux\n", textsize);
 	Bflush(&bso);
 }
-		
+
 void
 xdefine(char *p, int t, long v)
 {
@@ -435,6 +435,95 @@ buildop(void)
 			i++;
 		oprange[r].stop = optab+i;
 		i--;
+
+		switch(r) {
+		default:
+			diag("unknown op in build: %A", r);
+			errorexit();
+		case AXXX:
+			break;
+
+		case AADD:
+		case ASUB:
+		case AMUL:
+		case AMULH:
+		case AMULHSU:
+		case AMULHU:
+		case ADIV:
+		case ADIVU:
+		case AREM:
+		case AREMU:
+			break;
+
+		case ASLL:
+		case ASRL:
+		case ASRA:
+			break;
+
+		case ASLT:
+			oprange[ASGT] = oprange[r];
+			break;
+		case ASLTU:
+			oprange[ASGTU] = oprange[r];
+			break;
+		case AXOR:
+		case AOR:
+		case AAND:
+
+		case ABEQ:
+			oprange[ABGT] = oprange[r];
+			oprange[ABGTU] = oprange[r];
+			oprange[ABLE] = oprange[r];
+			oprange[ABLEU] = oprange[r];
+			break;
+		case ABNE:
+		case ABLT:
+		case ABGE:
+		case ABLTU:
+		case ABGEU:
+			break;
+
+		case AJAL:
+		case AJMP:
+			break;
+
+		case AECALL:
+		case AEBREAK:
+			break;
+
+		case AMOVB:
+		case AMOVBU:
+		case AMOVHU:
+		case AMOVH:
+		case AMOVW:
+			break;
+
+		case AMOVD:
+			oprange[AMOVF] = oprange[r];
+			oprange[AMOVFD] = oprange[r];
+			oprange[AMOVDF] = oprange[r];
+			break;
+		case AMOVWD:
+			oprange[AMOVWF] = oprange[r];
+			oprange[AMOVUF] = oprange[r];
+			oprange[AMOVUD] = oprange[r];
+			break;
+		case AMOVDW:
+			oprange[AMOVFW] = oprange[r];
+			break;
+		case ACMPEQD:
+		case ACMPLED:
+		case ACMPLTD:
+		case AADDD:
+		case ASUBD:
+		case AMULD:
+		case ADIVD:
+			break;
+
+		case AWORD:
+		case ATEXT:
+			break;
+		}
 	}
 
 	buildrep(1, AMOVW);

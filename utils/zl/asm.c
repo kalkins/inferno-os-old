@@ -87,6 +87,14 @@ asmb(void)
 	long t, etext;
 	Optab *o;
 
+	/* ELF specific variables */
+	int shrtrtablen = 5;
+	char* shrtrtab[shrtrtablen];
+	long shrtrtaboffset;
+	long shrtrtabsize;
+
+	int i;
+
 	if(debug['v'])
 		Bprint(&bso, "%5.2f asm\n", cputime());
 	Bflush(&bso);
@@ -203,6 +211,18 @@ asmb(void)
 		lput(lcsize);
 		break;
 	case 5:
+		shrtrtab[0] = "";		/* the null section */
+		shrtrtab[1] = ".text";		/* the text section */
+		shrtrtab[2] = ".rwdata";		/* the data section */
+		shrtrtab[3] = ".symtab";		/* the symbol table */
+		shrtrtab[4] = ".shrtrtab";		/* the section name table */
+
+		shrtrtaboffset = HEADR + textsize + datsize + symsize; // 0x9c565;
+		shrtrtabsize = 0; // Starts with a null byte
+		for (i = 0; i < shrtrtablen; i++) {
+			shrtrtabsize += strlen(shrtrtab[i]) + 1;
+		}
+
 		/* first part of ELF is byte-wide parts, thus no byte-order issues */
 		strnput("\177ELF", 4);		/* e_ident */
 		CPUT(1);			/* class = 32 bit */
@@ -217,14 +237,14 @@ asmb(void)
 		objput(1L);			/* version = CURRENT */
 		objput(entryvalue());		/* entry vaddr */
 		objput(52L);			/* offset to first phdr */
-		objput(0L);			/* offset to first shdr */
+		objput(shrtrtaboffset + shrtrtabsize);			/* offset to first shdr */
 		objput(0L);			/* flags */
 		objhput(52);			/* Ehdr size */
 		objhput(32);			/* Phdr size */
 		objhput(3);			/* # of Phdrs */
-		objhput(0);			/* Shdr size */
-		objhput(0);			/* # of Shdrs */
-		objhput(0);			/* Shdr string size */
+		objhput(0x28);			/* Shdr size */
+		objhput(5);			/* # of Shdrs */
+		objhput(4);			/* Shdr index of section names section */
 
 		/* "Program headers" - one per chunk of file to load */
 
@@ -260,6 +280,77 @@ asmb(void)
 		objput(lcsize);			/* line number size */
 		objput(0x04L);			/* protections = R */
 		objput(0L);			/* do not claim alignment */
+
+		cflush();
+		OFFSET = shrtrtaboffset; // HEADR+textsize+datsize+symsize;
+		seek(cout, OFFSET, 0);	/* jump to after the sections */
+
+		/* Section name table: All names start with a '.', and are zero-terminated */
+		for (i = 0; i < shrtrtablen; i++) {
+			strnput(shrtrtab[i], strlen(shrtrtab[i]) + 1);
+		}
+
+		/* "Section headers" - one per chunck of file */
+		// The first section is blank
+		objput(0L);		/* section name: .text */
+		objput(0L);			/* section type: SHT_PROGBITS */
+		objput(0L);	/* section attributes: SHT_ALLOC | SHT_EXECINSTR */
+		objput(0L);		/* address in memory */
+		objput(0L);			/* offset in memory */
+		objput(0L);	/* size */
+		objput(0L);			/* sh_link */
+		objput(0L);			/* sh_info */
+		objput(0L);			/* sh_addralign */
+		objput(0L);			/* sh_entsize */
+
+		OFFSET = strlen(shrtrtab[0]) + 1;
+		objput(OFFSET);		/* section name: .text */
+		objput(1L);			/* section type: SHT_PROGBITS */
+		objput(2L | 4L);	/* section attributes: SHT_ALLOC | SHT_EXECINSTR */
+		objput(HEADR);		/* address in memory */
+		objput(0L);			/* offset in memory */
+		objput(textsize);	/* size */
+		objput(0L);			/* sh_link */
+		objput(0L);			/* sh_info */
+		objput(0L);			/* sh_addralign */
+		objput(0L);			/* sh_entsize */
+
+		OFFSET += strlen(shrtrtab[1]) + 1;
+		objput(OFFSET);		/* section name: .rwdata */
+		objput(1L);			/* section type: SHT_PROGBITS */
+		objput(1L | 2L);	/* section attributes: SHT_WRITE | SHT_ALLOC */
+		objput(HEADR+textsize);		/* address in memory */
+		objput(textsize);			/* offset in memory */
+		objput(datsize);	/* size */
+		objput(0L);			/* sh_link */
+		objput(0L);			/* sh_info */
+		objput(0L);			/* sh_addralign */
+		objput(0L);			/* sh_entsize */
+
+		OFFSET += strlen(shrtrtab[2]) + 1;
+		objput(OFFSET);		/* section name: .symtab */
+		objput(0L);				/* section type: SHT_SYMTAB */
+		objput(0L);				/* section attributes: none */
+		objput(0L);				/* address in memory */
+		objput(textsize+datsize);			/* offset */
+		objput(symsize);		/* size */
+		objput(0L);				/* sh_link */
+		objput(0L);				/* sh_info */
+		objput(0L);				/* sh_addralign */
+		objput(0L);				/* sh_entsize */
+
+		OFFSET += strlen(shrtrtab[3]) + 1;
+		objput(OFFSET);		/* section name: .shrtrtab */
+		objput(3L);				/* section type: SHT_STRTAB */
+		objput(0L);				/* section attributes: none */
+		objput(0L);				/* address in memory */
+		objput(shrtrtaboffset);			/* offset */
+		objput(shrtrtabsize);		/* size */
+		objput(0L);				/* sh_link */
+		objput(0L);				/* sh_info */
+		objput(0L);				/* sh_addralign */
+		objput(0L);				/* sh_entsize */
+
 		break;
 	}
 	cflush();
@@ -661,7 +752,7 @@ asmout(Prog *p, Optab *o, int aflag)
 		v = p->from.offset;
 		o1 = OP_I(r, p->to.reg, v);
 		break;
-	
+
 	case 3:		/* beq S,[R,]L */
 		if(r == NREG)
 			r = REGZERO;
@@ -809,6 +900,9 @@ asmout(Prog *p, Optab *o, int aflag)
 		}
 		break;
 
+	case 28:	/* System calls */
+		o1 = OP_I(0, 0, o->param);
+		break;
 	}
 	if(aflag)
 		return o1;
@@ -839,4 +933,3 @@ asmout(Prog *p, Optab *o, int aflag)
 	}
 	return 0;
 }
-

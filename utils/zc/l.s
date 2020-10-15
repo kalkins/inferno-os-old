@@ -6,7 +6,7 @@ TEXT start(SB), $0
 	MOVW	$setSB(SB), R26
 
 	/* set stack pointer */
-	MOVW	$(512*1024-16),R27
+	MOVW	$(512*1024-16),SP
 
 	/* clear bss */
 	MOVW	$edata(SB), R1
