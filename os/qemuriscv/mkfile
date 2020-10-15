@@ -1,0 +1,53 @@
+<../../mkconfig
+
+#Configurable parameters
+
+CONF=qemuriscv			#default configuration
+CONFLIST=qemuriscv
+
+SYSTARG=$OSTARG
+OBJTYPE=riscv
+INSTALLDIR=$ROOT/Inferno/$OBJTYPE/bin	#path of directory where kernel is installed
+
+#LOADADDR=0x80400000
+LOADADDR=0x803ffff8
+
+<$ROOT/mkfiles/mkfile-$SYSTARG-$OBJTYPE	#set vars based on target system
+
+<| $SHELLNAME ../port/mkdevlist $CONF
+
+HFILES=\
+	mem.h\
+	dat.h\
+	fns.h\
+	io.h\
+
+OBJ=load.$O\
+	main.$O\
+	$IP\
+	$DEVS\
+	$ETHERS\
+	$LINKS\
+	$PORT\
+	$MISC\
+	$OTHERS\
+	$CONF.root.$O\
+
+LIBNAMES=${LIBS:%=lib%.a}
+LIBDIRS=$LIBS
+
+CFLAGS=-wFV -I$ROOT/Inferno/$OBJTYPE/include -I$ROOT/include -I$ROOT/libinterp
+KERNDATE=`{$NDATE}
+
+default:V: i$CONF
+
+i$CONF: $OBJ $CONF.c $CONF.root.h $LIBNAMES
+	$CC $CFLAGS -DKERNDATE=$KERNDATE $CONF.c
+	$LD -u -l -o $target -H5 -T$LOADADDR $OBJ $CONF.$O $LIBFILES
+
+install:V: i$CONF
+        cp i$CONF $INSTALLDIR/i$CONF
+
+<../port/portmkfile
+
+main.$O: $ROOT/Inferno/$OBJTYPE/include/ureg.h

@@ -1,0 +1,5 @@
+-I.
+-I../../utils/include
+-I../../Inferno/riscv/include
+-I../../libinterp
+-I/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0/include

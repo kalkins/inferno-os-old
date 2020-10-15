@@ -1,0 +1,4 @@
+-Iinclude
+-Iutils/include
+-ILinux/386/include
+-I/usr/riscv32-elf/include
