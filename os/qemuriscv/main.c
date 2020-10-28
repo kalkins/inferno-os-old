@@ -47,9 +47,9 @@ void    splx(int) { return; }
 int     spllo(void) { return 0; }
 void    splxpc(int) { return; }
 int     islo(void) { return 0; }
-int     setlabel(Label*) { return 0; }
-void    gotolabel(Label*) { return; }
-ulong   getcallerpc(void*) { return 0; }
+extern int     setlabel(Label*);
+extern void    gotolabel(Label*);
+extern ulong   getcallerpc(void*);
 int     segflush(void*, ulong) { return 0; }
 void    idlehands(void) { return; }
 void    kprocchild(Proc *p, void (*func)(void*), void *arg) { return; }
@@ -74,6 +74,5 @@ void    FPrestore(void*) {}
 
 void
 main() {
-	sbi_ecall_console_puts("\nTest payload running\n");
-	for (;;);
+	sbi_ecall_console_puts("\nInferno is running!\n");
 }

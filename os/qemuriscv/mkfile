@@ -9,8 +9,8 @@ SYSTARG=$OSTARG
 OBJTYPE=riscv
 INSTALLDIR=$ROOT/Inferno/$OBJTYPE/bin	#path of directory where kernel is installed
 
-#LOADADDR=0x80400000
-LOADADDR=0x803ffff8
+LOADADDR=0x80400000
+#LOADADDR=0x803ffff8
 
 <$ROOT/mkfiles/mkfile-$SYSTARG-$OBJTYPE	#set vars based on target system
 

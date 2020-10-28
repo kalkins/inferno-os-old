@@ -24,7 +24,8 @@ struct Lock
 
 struct Label
 {
-    int x;
+	ulong sp;
+	ulong pc;
 };
 
 enum /* FPenv.status */
