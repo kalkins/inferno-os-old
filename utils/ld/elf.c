@@ -8,7 +8,8 @@ enum {
 	/* offsets into string table */
 	Stitext		= 1,
 	Stidata		= 7,
-	Stistrtab	= 13,
+	Stisymtab  	= 13,
+	Stistrtab	= 20,
 };
 
 void
@@ -38,7 +39,9 @@ elfstrtab(void)
 	cput(0);
 	strnput(".data", 5);		/* +7 */
 	cput(0);
-	strnput(".strtab", 7);		/* +13 */
+	strnput(".symtab", 7);		/* +13 */
+	cput(0);
+	strnput(".strtab", 7);		/* +20 */
 	cput(0);
 	cput(0);
 }
@@ -82,6 +85,8 @@ elf32sectab(void (*putl)(long))
 		HEADR, textsize, 0, 0, 0x10000, 0);
 	elf32shdr(putl, Stidata, Progbits, Salloc|Swrite, INITDAT,
 		HEADR+textsize, datsize, 0, 0, 0x10000, 0);
+	elf32shdr(putl, Stisymtab, Symtab, 0, 0,
+		HEADR+textsize+datsize, symsize, 0, 0, 1, 0);
 	elf32shdr(putl, Stistrtab, Strtab, 1 << 5, 0,
 		HEADR+textsize+datsize+symsize+3*Shdr32sz, 14, 0, 0, 1, 0);
 	elfstrtab();
@@ -162,14 +167,14 @@ elf64phdr(void (*putl)(long), void (*putll)(vlong), ulong type, uvlong off,
 	uvlong vaddr, uvlong paddr, uvlong filesz, uvlong memsz, ulong prots,
 	uvlong align)
 {
-	putl(type);		
-	putl(prots);		
-	putll(off);		
-	putll(vaddr);	
-	putll(paddr);	
-	putll(filesz);	
-	putll(memsz);	
-	putll(align);		
+	putl(type);
+	putl(prots);
+	putll(off);
+	putll(vaddr);
+	putll(paddr);
+	putll(filesz);
+	putll(memsz);
+	putll(align);
 }
 
 void
@@ -197,6 +202,8 @@ elf64sectab(void (*putl)(long), void (*putll)(vlong))
 		HEADR, textsize, 0, 0, 0x10000, 0);
 	elf64shdr(putl, putll, Stidata, Progbits, Salloc|Swrite, INITDAT,
 		HEADR+textsize, datsize, 0, 0, 0x10000, 0);
+	elf64shdr(putl, putll, Stisymtab, Symtab, 0, 0,
+		HEADR+textsize+datsize, symsize, 0, 0, 1, 0);
 	elf64shdr(putl, putll, Stistrtab, Strtab, 1 << 5, 0,
 		HEADR+textsize+datsize+symsize+3*Shdr64sz, 14, 0, 0, 1, 0);
 	elfstrtab();
