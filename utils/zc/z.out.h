@@ -10,7 +10,7 @@ enum
 	REGRET		= 10,	/* fn return value */
 	REGARG		= 10,	/* fn arg value */
 	REGEXT		= 24,	/* extern reg from here down */
-	REGSB		= 3,	/* static base */
+	REGSB		= 29,	/* static base */
 	REGSP		= 2,	/* stack pointer */
 	REGTMP		= 28,	/* assembler temporary */
 	REGLINK		= 1,	/* call return address */

@@ -45,6 +45,8 @@ long	OFFSET;
 			cflush();\
 	}
 
+#define cput(c) CPUT(c)
+
 void
 objput(long l)	/* emit long in byte order appropriate to object machine */
 {
@@ -57,10 +59,51 @@ objhput(short s)
 	HPUT(s);
 }
 
+/* these need to take long arguments to be compatible with elf.c */
 void
-lput(long l)		/* emit long in big-endian byte order */
+wputl(long w)
 {
-	LBEPUT(l);
+	CPUT(w);
+	CPUT(w>>8);
+}
+
+void
+wput(long w)
+{
+	CPUT(w>>8);
+	CPUT(w);
+}
+
+void
+lput(long l)
+{
+	CPUT(l>>24);
+	CPUT(l>>16);
+	CPUT(l>>8);
+	CPUT(l);
+}
+
+void
+lputl(long l)
+{
+	CPUT(l);
+	CPUT(l>>8);
+	CPUT(l>>16);
+	CPUT(l>>24);
+}
+
+void
+llput(vlong v)
+{
+	lput(v>>32);
+	lput(v);
+}
+
+void
+llputl(vlong v)
+{
+	lputl(v);
+	lputl(v>>32);
 }
 
 long
@@ -223,6 +266,8 @@ asmb(void)
 			shrtrtabsize += strlen(shrtrtab[i]) + 1;
 		}
 
+		elf32(RISCV, ELFDATA2LSB, 0, nil);
+
 		/* first part of ELF is byte-wide parts, thus no byte-order issues */
 		strnput("\177ELF", 4);		/* e_ident */
 		CPUT(1);			/* class = 32 bit */
@@ -241,7 +286,7 @@ asmb(void)
 		objput(0L);			/* flags */
 		objhput(52);			/* Ehdr size */
 		objhput(32);			/* Phdr size */
-		objhput(3);			/* # of Phdrs */
+		objhput(2);			/* # of Phdrs */
 		objhput(0x28);			/* Shdr size */
 		objhput(5);			/* # of Shdrs */
 		objhput(4);			/* Shdr index of section names section */

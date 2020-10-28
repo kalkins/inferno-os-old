@@ -44,8 +44,8 @@ Optab	optab[] =
  /* jalr	*/	AJAL,		C_NONE,		C_SOREG,	5,	4,	OJALR,	0,	REGLINK,
  /* jalr	*/	AJMP,		C_NONE,		C_SOREG,	5,	4,	OJALR,	0,	REGZERO,
 
- /* ecall	*/	AECALL,		C_NONE,		C_NONE,		0,	4,	OSYSTEM,	0,	0,
- /* ebreak	*/	AEBREAK,	C_NONE,		C_NONE,		0,	4,	OSYSTEM,	0,	1,
+ /* ecall	*/	AECALL,		C_NONE,		C_NONE,		28,	4,	OSYSTEM,	0,	0,
+ /* ebreak	*/	AEBREAK,	C_NONE,		C_NONE,		28,	4,	OSYSTEM,	0,	1,
 
  /* sb		*/	AMOVB,		C_REG,		C_SOREG,	6,	4,	OSTORE,	0,	0,
  /* sb		*/	AMOVBU,		C_REG,		C_SOREG,	6,	4,	OSTORE,	0,	0,

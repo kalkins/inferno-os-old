@@ -1,6 +1,7 @@
 #include	<lib9.h>
 #include	<bio.h>
 #include	"../zc/z.out.h"
+#include	"../ld/elf.h"
 
 #ifndef	EXTERN
 #define	EXTERN	extern
@@ -303,7 +304,12 @@ void	loadlib(void);
 void	listinit(void);
 Sym*	lookup(char*, int);
 void	lput(long);
+void	lputl(long);
+void	llput(vlong v);
+void	llputl(vlong v);
 void	bput(long);
+void	wput(long);
+void	wputl(long);
 void	mkfwd(void);
 void*	mysbrk(ulong);
 void	names(void);

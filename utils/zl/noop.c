@@ -241,7 +241,7 @@ noops(void)
 			p->from.offset = 0;
 			p->from.reg = REGSP;
 			p->to.type = D_REG;
-			p->to.reg = 2;
+			p->to.reg = REGLINK;
 
 			q = p;
 			if(autosize) {
@@ -262,7 +262,7 @@ noops(void)
 			q1->line = p->line;
 			q1->to.type = D_OREG;
 			q1->to.offset = 0;
-			q1->to.reg = 2;
+			q1->to.reg = REGLINK;
 			q1->mark |= BRANCH;
 
 			q1->link = q->link;
