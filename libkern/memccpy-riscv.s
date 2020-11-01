@@ -1,20 +1,20 @@
 	TEXT	memccpy(SB), $0
-MOVW R1, 0(FP)
-	MOVW	n+12(FP), R1
-	BEQ	R1, ret
-	MOVW	s1+0(FP), R3
-	MOVW	s2+4(FP), R2
-	MOVBU	c+11(FP), R4
-	ADD	R1, R2, R5
+MOVW R8, 0(FP)
+	MOVW	n+12(FP), R8
+	BEQ	R8, ret
+	MOVW	s1+0(FP), R10
+	MOVW	s2+4(FP), R9
+	MOVBU	c+8(FP), R11
+	ADD	R8, R9, R12
 
-l1:	MOVBU	(R2), R6
-	ADD	$1, R2
-	MOVB	R6, (R3)
-	ADD	$1, R3
-	BEQ	R4, R6, eq
-	BNE	R2, R5, l1
-	MOVW	$0, R1
+l1:	MOVBU	(R9), R13
+	ADD	$1, R9
+	MOVB	R13, (R10)
+	ADD	$1, R10
+	BEQ	R11, R13, eq
+	BNE	R9, R12, l1
+	MOVW	$0, R8
 	RET
 
-eq:	MOVW	R3, R1
+eq:	MOVW	R10, R8
 ret:	RET

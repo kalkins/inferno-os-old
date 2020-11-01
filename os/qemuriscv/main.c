@@ -2,10 +2,15 @@
 #include "../port/lib.h"
 #include "dat.h"
 #include "mem.h"
+#include "fns.h"
 
 Conf conf;
 Mach *m = (Mach*)MACHADDR;
 Proc *up = 0;
+
+extern int main_pool_pcnt;
+extern int heap_pool_pcnt;
+extern int image_pool_pcnt;
 
 #include "../port/uart.h"
 PhysUart* physuart[1];
@@ -35,18 +40,25 @@ extern int sbi_ecall(unsigned long a0, unsigned long a1, unsigned long a2, unsig
 
 #define sbi_ecall_console_putc(c) SBI_ECALL_1(SBI_EXT_0_1_CONSOLE_PUTCHAR, (c))
 
-static inline void sbi_ecall_console_puts(const char *str)
+static inline void sbi_ecall_console_write(const char *str)
 {
 	while (str && *str)
 		sbi_ecall_console_putc(*str++);
 }
 
+static inline void sbi_ecall_console_serwrite(const char *str, int len)
+{
+	int i;
+	for (i = 0; i < len; i++)
+		sbi_ecall_console_putc(str[i]);
+}
+
 int     waserror(void) { return 0; }
-int     splhi(void) { return 0; }
-void    splx(int) { return; }
-int     spllo(void) { return 0; }
-void    splxpc(int) { return; }
-int     islo(void) { return 0; }
+extern int     splhi(void);
+extern void    splx(int);
+extern int     spllo(void);
+extern void    splxpc(int);
+extern int     islo(void);
 extern int     setlabel(Label*);
 extern void    gotolabel(Label*);
 extern ulong   getcallerpc(void*);
@@ -73,6 +85,48 @@ void    FPsave(void*) {}
 void    FPrestore(void*) {}
 
 void
+confinit(void)
+{
+	ulong base;
+	conf.topofmem = 128*MB;
+
+	base = PGROUND((ulong)end);
+	conf.base0 = base;
+
+	conf.npage1 = 0;
+	conf.npage0 = (conf.topofmem - base)/BY2PG;
+	conf.npage = conf.npage0 + conf.npage1;
+	conf.ialloc = (((conf.npage*(main_pool_pcnt))/100)/2)*BY2PG;
+
+	conf.nproc = 100 + ((conf.npage*BY2PG)/MB)*5;
+	conf.nmach = 1;
+
+	print("Conf: top=%lud, npage0=%lud, ialloc=%lud, nproc=%lud\n",
+			conf.topofmem, conf.npage0,
+			conf.ialloc, conf.nproc);
+}
+
+static void
+poolsizeinit(void)
+{
+	ulong nb;
+	nb = conf.npage*BY2PG;
+	poolsize(mainmem, (nb*main_pool_pcnt)/100, 0);
+	poolsize(heapmem, (nb*heap_pool_pcnt)/100, 0);
+	poolsize(imagmem, (nb*image_pool_pcnt)/100, 1);
+}
+
+void
 main() {
-	sbi_ecall_console_puts("\nInferno is running!\n");
+	sbi_ecall_console_write("\nInferno is running!\n");
+
+	memset(edata, 0, end-edata);
+	memset(m, 0, sizeof(Mach));
+	conf.nmach = 1;
+	serwrite = &sbi_ecall_console_serwrite;
+
+	confinit();
+	xinit();
+	poolinit();
+	poolsizeinit();
 }

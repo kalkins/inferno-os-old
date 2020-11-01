@@ -4,8 +4,6 @@ typedef	unsigned short	ushort;
 typedef	unsigned char	uchar;
 typedef	signed char	schar;
 
-#define nofloatyet 1
-
 #define	SIGN(n)	(1UL<<(n-1))
 
 typedef	struct	Vlong	Vlong;
@@ -48,7 +46,6 @@ _subv(Vlong *r, Vlong a, Vlong b)
 
 #pragma profile on
 
-#ifdef nofloatyet
 void
 _d2v(Vlong *y, double d)
 {
@@ -129,7 +126,6 @@ _v2f(Vlong x)
 {
 	return _v2d(x);
 }
-#endif
 
 /* too many of these are also needed by profiler; leave them out */
 #pragma profile off
@@ -660,55 +656,55 @@ _nev(Vlong lv, Vlong rv)
 int
 _ltv(Vlong lv, Vlong rv)
 {
-	return (long)lv.hi < (long)rv.hi ||
+	return (long)lv.hi < (long)rv.hi || 
 		(lv.hi == rv.hi && lv.lo < rv.lo);
 }
 
 int
 _lev(Vlong lv, Vlong rv)
 {
-	return (long)lv.hi < (long)rv.hi ||
+	return (long)lv.hi < (long)rv.hi || 
 		(lv.hi == rv.hi && lv.lo <= rv.lo);
 }
 
 int
 _gtv(Vlong lv, Vlong rv)
 {
-	return (long)lv.hi > (long)rv.hi ||
+	return (long)lv.hi > (long)rv.hi || 
 		(lv.hi == rv.hi && lv.lo > rv.lo);
 }
 
 int
 _gev(Vlong lv, Vlong rv)
 {
-	return (long)lv.hi > (long)rv.hi ||
+	return (long)lv.hi > (long)rv.hi || 
 		(lv.hi == rv.hi && lv.lo >= rv.lo);
 }
 
 int
 _lov(Vlong lv, Vlong rv)
 {
-	return lv.hi < rv.hi ||
+	return lv.hi < rv.hi || 
 		(lv.hi == rv.hi && lv.lo < rv.lo);
 }
 
 int
 _lsv(Vlong lv, Vlong rv)
 {
-	return lv.hi < rv.hi ||
+	return lv.hi < rv.hi || 
 		(lv.hi == rv.hi && lv.lo <= rv.lo);
 }
 
 int
 _hiv(Vlong lv, Vlong rv)
 {
-	return lv.hi > rv.hi ||
+	return lv.hi > rv.hi || 
 		(lv.hi == rv.hi && lv.lo > rv.lo);
 }
 
 int
 _hsv(Vlong lv, Vlong rv)
 {
-	return lv.hi > rv.hi ||
+	return lv.hi > rv.hi || 
 		(lv.hi == rv.hi && lv.lo >= rv.lo);
 }

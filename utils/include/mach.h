@@ -108,7 +108,7 @@ enum
 	ObjSpim,		/* .0 */
 	ObjPower64,		/* .9 */
 	ObjArm64,		/* .4? */
-	ObjRiscv,		/* .z */
+	ObjRiscv,		/* .i */
 	Maxobjtype,
 
 	CNONE  = 0,		/* symbol table classes */

@@ -1,11 +1,23 @@
-TEXT	setfcr+0(SB),0,$0
-RET
+#define LINK	R1
+#define SP	R2
+#define ARG	8
 
-TEXT	getfcr+0(SB),0,$0
-RET
+#define FFLAGS		1
+#define FRM		2
+#define FCSR		3
 
-TEXT	getfsr+0(SB),0,$0
-RET
+TEXT	getfsr(SB), $0
+	MOVW	CSR(FCSR), R(ARG)
+	RET
 
-TEXT	setfsr+0(SB),0,$0
-RET
+TEXT	setfsr(SB), $0
+	MOVW	R(ARG), CSR(FCSR)
+	RET
+
+TEXT	getfcr(SB), $0
+	MOVW	CSR(FCSR), R(ARG)
+	RET
+
+TEXT	setfcr(SB), $0
+	MOVW	R(ARG), CSR(FCSR)
+	RET

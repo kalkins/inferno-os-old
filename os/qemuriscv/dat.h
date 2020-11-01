@@ -49,17 +49,20 @@ struct Conf
 {
     ulong   nmach;      /* processors */
     ulong   nproc;      /* processes */
+	ulong   npage;      /* total physical pages of memory */
     ulong   npage0;     /* total physical pages of memory */
     ulong   npage1;     /* total physical pages of memory */
     ulong   base0;      /* base of bank 0 */
     ulong   base1;      /* base of bank 1 */
     ulong   ialloc;     /* max interrupt time allocation in bytes */
+	ulong   topofmem;   /* top addr of memory */
 };
 
 #include "../port/portdat.h"
 
 struct Mach
 {
+	ulong	splpc;		/* pc of last caller to splhi */
     int     machno;     /* physical id of processor */
     ulong   ticks;      /* of the clock since boot time */
     Proc*   proc;       /* current process on this processor */

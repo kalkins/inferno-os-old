@@ -28,6 +28,9 @@ ALWAYS=\
 	za\
 	zc\
 	zl\
+	ia\
+	ic\
+	il\
 
 #
 #	Utils we build on Posix and Nt, which already exist on Plan 9.
