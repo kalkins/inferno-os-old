@@ -145,9 +145,10 @@ asmb(void)
 		break;
 	case 5:
 		if(thechar == 'j')
-			elf64(243, ELFDATA2LSB, 0, nil);		/* 243 is RISCV */
+			elf64(RISCV, ELFDATA2LSB, 0, nil);
 		else
-			elf32(243, ELFDATA2LSB, 0, nil);
+			elf32(RISCV, ELFDATA2LSB, 0, nil);
+		break;
 	}
 	cflush();
 }
@@ -695,7 +696,7 @@ asmout(Prog *p, Optab *o, int aflag)
 			diag("imm out of range\n%P", p);
 		o1 = OP_I(r, p->to.reg, v);
 		break;
-	
+
 	case 3:		/* beq S,[R,]L */
 		if(r == NREG)
 			r = REGZERO;
@@ -915,7 +916,7 @@ asmout(Prog *p, Optab *o, int aflag)
 			o2 = OP_FI(1, p->to.reg, p->to.reg, v - 12);	/* slli */
 		else
 			o2 = OP_I(p->to.reg, p->to.reg, 12 - v);	/* srai */
-		break; 
+		break;
 
 	case 22:	/* CSRRx C, rs, rd */
 		v = p->from.offset & 0xFFF;
@@ -963,4 +964,3 @@ asmout(Prog *p, Optab *o, int aflag)
 	}
 	return o->size;
 }
-

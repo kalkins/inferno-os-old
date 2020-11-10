@@ -809,7 +809,7 @@ loop:
 		p->link = datap;
 		datap = p;
 		break;
-	
+
 	case ADATA:
 		if(p->from.sym == S) {
 			diag("DATA without a sym\n%P", p);
@@ -1331,6 +1331,7 @@ nuxiinit(void)
 	Bflush(&bso);
 }
 
+int
 find1(long l, int c)
 {
 	char *p;

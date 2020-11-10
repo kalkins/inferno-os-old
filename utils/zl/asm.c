@@ -36,16 +36,17 @@ long	OFFSET;
 			cflush();\
 	}
 
-#define	CPUT(c)\
-	{\
-		cbp[0] = (c);\
-		cbp++;\
-		cbc--;\
-		if(cbc <= 0)\
-			cflush();\
-	}
+#define CPUT(c) cput(c)
 
-#define cput(c) CPUT(c)
+void
+cput(int c)
+{
+	cbp[0] = c;
+	cbp++;
+	cbc--;
+	if(cbc <= 0)
+		cflush();
+}
 
 void
 objput(long l)	/* emit long in byte order appropriate to object machine */
