@@ -28,7 +28,7 @@ int	_is5(char*),
 	_isk(char*),
 	_isq(char*),
 	_isv(char*),
-	_isz(char*),
+	_isi(char*),
 	_read5(Biobuf*, Prog*),
 	_read6(Biobuf*, Prog*),
 	_read8(Biobuf*, Prog*),
@@ -36,7 +36,7 @@ int	_is5(char*),
 	_readk(Biobuf*, Prog*),
 	_readq(Biobuf*, Prog*),
 	_readv(Biobuf*, Prog*),
-	_readz(Biobuf*, Prog*);
+	_readi(Biobuf*, Prog*);
 
 typedef struct Obj	Obj;
 typedef struct Symtab	Symtab;
@@ -66,7 +66,8 @@ static Obj	obj[] =
 	/*[ObjAmd64]*/	"amd64 .6",	_is6, _read6,
 	/*[ObjSpim]*/	{0, 0,},
 	/*[ObjPower64]*/	"power64 .9",	_is9, _read9,
-	/*[ObjRISCV32]*/	"riscv .z",	_isz, _readz,
+	/*[ObjRiscv]*/	"riscv .i",	_isi, _readi,
+	/*[ObjRiscv64]*/	"riscv64 .j",	_isi, _readi,
 	/*[Maxobjtype]*/	0, 0
 };
 
@@ -274,7 +275,7 @@ _offset(int id, vlong off)
 /*
  * update the type of a global text or data symbol
  */
-static void 
+static void
 objupdate(int id, int type)
 {
 	Sym *s;

@@ -45,7 +45,7 @@ dodata(void)
 	 *	(rational is that data segment is more easily
 	 *	 addressed through offset on SB)
 	 */
-	odd = thechar == 'j' ? 4 : 0;
+	odd = 4;
 	orig = 0;
 	for(i=0; i<NHASH; i++)
 	for(s = hash[i]; s != S; s = s->link) {

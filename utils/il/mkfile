@@ -1,8 +1,6 @@
-#                                              -*-makefile-*-
 <../../mkconfig
 
-TARG=il
-TARG64=jl
+TARG=il		# also makes jl (for riscv64)
 
 OFILES=\
 	asm.$O\
@@ -25,27 +23,17 @@ HFILES=\
 LIBS=bio 9			# order is important
 
 BIN=$ROOT/$OBJDIR/bin
-CFLAGS=$CFLAGS -I../include -I.
+
 <$ROOT/mkfiles/mkone-$SHELLTYPE
+
+CFLAGS=	$CFLAGS -I../include -I.
 
 enam.$O:	../ic/enam.c
 	$CC $CFLAGS ../ic/enam.c
 elf.$O:	../ld/elf.c
 	$CC $CFLAGS ../ld/elf.c
 
-x:V:	$O.out
-	$O.out -la -o/dev/null x.i
-
-test:V:	$O.out
-	rm -f xxx
-	mv $O.out xxx
-	./xxx $OFILES
-	cmp $O.out xxx
-
-install:V:	$BIN/$TARG64
-
-$BIN/$TARG64:	$O.out
-	cp $prereq $target
-
-$TARGMODEL.$O: ../ld/$TARGMODEL.c
+$TARGMODEL.$O:	../ld/$TARGMODEL.c
 	$CC $CFLAGS ../ld/$TARGMODEL.c
+
+install:V:	$BIN/jl

@@ -535,9 +535,9 @@ utils
 		vcodas.c
 		vdb.c
 		vobj.c
-		z.c
-		zdb.c
-		zobj.c
+		i.c
+		idb.c
+		iobj.c
 	libregexp
 		NOTICE
 		mkfile

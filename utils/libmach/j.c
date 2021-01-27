@@ -1,15 +1,15 @@
 /*
- * RISC-V definition
+ * RISC-V RV64 definition
  */
 #include <lib9.h>
 #include <bio.h>
-#include "uregi.h"
+#include "uregj.h"
 #include <mach.h>
 
 #define	REGOFF(x)	offsetof(struct Ureg, x)
 #define	REGSIZE		sizeof(struct Ureg)
 
-Reglist riscvreglist[] = {
+Reglist riscv64reglist[] = {
 	{"PC",		REGOFF(pc),	RINT, 'X'},
 	{"SP",		REGOFF(r27),	RINT, 'X'},
 	{"R31",		REGOFF(r31),	RINT, 'X'},
@@ -46,11 +46,11 @@ Reglist riscvreglist[] = {
 };
 
 	/* the machine description */
-Mach mriscv =
+Mach mriscv64 =
 {
-	"riscv",
-	MRISCV,		/* machine type */
-	riscvreglist,	/* register set */
+	"riscv64",
+	MRISCV64,		/* machine type */
+	riscv64reglist,	/* register set */
 	REGSIZE,	/* register set size */
 	0,		/* fp register set size */
 	"PC",		/* name of PC */
@@ -63,8 +63,8 @@ Mach mriscv =
 	0xC0000000ULL,	/* kernel text mask */
 	0x3FFFFFFFULL,	/* user stack top */
 	2,		/* quantization of pc */
-	4,		/* szaddr */
-	4,		/* szreg */
+	8,		/* szaddr */
+	8,		/* szreg */
 	4,		/* szfloat */
 	8,		/* szdouble */
 };

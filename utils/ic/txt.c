@@ -430,7 +430,7 @@ err:
 void
 regsalloc(Node *n, Node *nn)
 {
-	cursafe = align(cursafe, nn->type, Aaut3);
+	cursafe = align(cursafe + stkoff, nn->type, Aaut3) - stkoff;
 	maxargsafe = maxround(maxargsafe, cursafe+curarg);
 	*n = *nodsafe;
 	n->xoffset = -(stkoff + cursafe);

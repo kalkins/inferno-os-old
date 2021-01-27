@@ -1,8 +1,7 @@
-#include <u.h>
-#include <libc.h>
+#include <lib9.h>
 #include <bio.h>
 #include <mach.h>
-#include "../cmd/ic/i.out.h"
+#include "ic/i.out.h"
 
 static char *riscvexcep(Map*, Rgetter);
 
@@ -51,7 +50,7 @@ enum {
 
 /* copy anames from compiler */
 static
-#include "../cmd/ic/enam.c"
+#include "ic/enam.c"
 
 static Opclass opOLOAD = {
 	"a,d",
@@ -152,7 +151,7 @@ struct Compclass {
 	uchar	immbits[18];
 };
 
-static Compclass rv32compressed[0x2E] = {
+static Compclass rv32compressed[0x2D] = {
 /* 00-07 ([1:0] = 0) ([15:13] = 0-7) */
 	{"ADDI4SPN $i,d", 22, 6, 5, 11, 12, 7, 8, 9, 10},          /* 12:5 → 5:4|9:6|2|3 */
 	{"FLD a,fd",      24, 10, 11, 12, 5, 6},                   /* 12:10|6:5 → 5:3|7:6 */
@@ -198,7 +197,7 @@ static Compclass rv32compressed[0x2E] = {
 	{"? ",	0},
 	{"? ",	0},
 
-/* 23-26 ([1:0] = 2) ([15:13] = 4) ([12] = 0-1) ((rs2 != 0) = 0-1) */
+/* 23-26 ([1:0] = 2) ([15:13] = 4) ((rs2 != 0) = 0-1) */
 	{"JR s",	0},
 	{"MV 2,d",	0},
 	{"JALR s",	0},
@@ -212,10 +211,7 @@ static Compclass rv32compressed[0x2E] = {
 	{"SD 2,a",	24, 10, 11, 12, 5, 6},                         /* 12:10|6:5 → 5:3|7:6 */
 	{"ADDIW $i,d",	~26, 2, 3, 4, 5, 6, 12},                   /* 12|6:2 → * 5:0 */
 	{"LDSP i,d",	23, 5, 6, 12, 2, 3, },                     /* 12|6:2 → 5:3|8:6 */
-	{"SDSP 2,i",	23, 10, 11, 12, 7, 8, 9},	               /* 12:7 → 5:3|8:6 */
-
-/* 2D-2D  C.ADD with (rd = 0) */
-	{"EBREAK",	0 }
+	{"SDSP 2,i",	23, 10, 11, 12, 7, 8, 9}	               /* 12:7 → 5:3|8:6 */
 };
 
 /* map major opcodes to opclass table */
@@ -421,8 +417,6 @@ decompress(Instr *i)
 			break;
 		case 2:
 			aop = 0x23 + ((w>>11) & 0x2) + (i->rs2 != 0);
-			if(aop == 0x26 && i->rd == 0)
-				aop = 0x2D;
 			break;
 		}
 	}
@@ -534,15 +528,6 @@ pseudo(Instr *i, int aop)
 			return 1;
 		}
 		break;
-	case ASYS:
-		switch(i->imm){
-		case 0:
-			format(i, "ECALL", nil);
-			return 1;
-		case 1:
-			format(i, "EBREAK", nil);
-			return 1;
-		}
 	}
 	return 0;
 }
@@ -663,7 +648,7 @@ riscvinstlen(Map *map, uvlong pc)
 }
 
 static char*
-riscvexcep(Map*, Rgetter)
+riscvexcep(Map* m, Rgetter r)
 {
 	return "Trap";
 }

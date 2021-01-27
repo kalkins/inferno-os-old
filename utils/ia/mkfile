@@ -1,8 +1,6 @@
-#                                              -*-makefile-*-
 <../../mkconfig
 
-TARG=ia
-TARG64=ja
+TARG=ia		# also makes ja (for riscv64)
 
 OFILES=\
 	y.tab.$O\
@@ -18,16 +16,16 @@ YFILES=a.y\
 LIBS=cc bio 9		# order is important
 
 BIN=$ROOT/$OBJDIR/bin
-
 <$ROOT/mkfiles/mkone-$SHELLTYPE
-YFLAGS=-D1 -d
 
-$O.ia $O.ja: $OFILES
-	$LD $LDFLAGS -o $target $prereq
+YFLAGS=-D1 -d
+CFLAGS=	$CFLAGS -I../include
 
 lex.$O:	../cc/macbody ../cc/lexbody
 
-install:V:	$BIN/$TARG64
+$ROOT/$OBJDIR/lib/libcc.a:
+	cd ../cc
+	mk $MKFLAGS install
+	mk $MKFLAGS clean
 
-$BIN/$TARG64:	$O.out
-	cp $prereq $target
+install:V:	$BIN/ja
