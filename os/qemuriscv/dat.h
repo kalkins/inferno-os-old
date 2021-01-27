@@ -13,6 +13,7 @@ typedef struct Mach Mach;
 typedef struct FPU FPU;
 typedef ulong Instr;
 typedef struct Conf Conf;
+typedef struct TrapStack TrapStack;
 
 struct Lock
 {
@@ -58,6 +59,12 @@ struct Conf
 	ulong   topofmem;   /* top addr of memory */
 };
 
+struct TrapStack
+{
+	ulong	regs[32];	/* integer registers */
+	double	fregs[32];	/* floating point registers. Assumed to be double */
+};
+
 #include "../port/portdat.h"
 
 struct Mach
@@ -67,6 +74,15 @@ struct Mach
     ulong   ticks;      /* of the clock since boot time */
     Proc*   proc;       /* current process on this processor */
     Label   sched;      /* scheduler wakeup */
+
+	// Stacks for exceptions
+	ulong	fiqstack[4];
+	ulong	irqstack[4];
+	ulong	abtstack[4];
+	ulong	undstack[4];
+
+	// Detect if kernel stack reaches Mach
+	int stack[1];
 };
 
 extern Mach *m;

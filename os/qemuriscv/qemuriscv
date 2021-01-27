@@ -7,7 +7,6 @@ dev
 	prog
 	srv
 	dup
-	uart
 
 lib
 	interp
@@ -67,3 +66,4 @@ root
 	/prog   /
 	/dis/lib
 	/dis/disk
+	/osinit.dis

@@ -11,7 +11,6 @@ OBJTYPE=riscv
 INSTALLDIR=$ROOT/Inferno/$OBJTYPE/bin	#path of directory where kernel is installed
 
 LOADADDR=0x80400000
-#LOADADDR=0x803ffff8
 
 <$ROOT/mkfiles/mkfile-$SYSTARG-$OBJTYPE	#set vars based on target system
 
@@ -24,6 +23,17 @@ HFILES=\
 	io.h\
 
 OBJ=load.$O\
+	inb.$O\
+	clock.$O\
+	uart.$O\
+	sbi.$O\
+	debug.$O\
+	dump.$O\
+	plic.$O\
+	trap.$O\
+	intr.$O\
+	csr.$O\
+	archqemuriscv.$O\
 	main.$O\
 	$IP\
 	$DEVS\
@@ -44,11 +54,21 @@ default:V: i$CONF
 
 i$CONF: $OBJ $CONF.c $CONF.root.h $LIBNAMES
 	$CC $CFLAGS -DKERNDATE=$KERNDATE $CONF.c
-	$LD -u -l -o $target -H5 -T$LOADADDR $OBJ $CONF.$O $LIBFILES
+	$LD -l -o $target -H5 -T$LOADADDR $OBJ $CONF.$O $LIBFILES
+	$LD -a -l -o $target -H5 -T$LOADADDR $OBJ $CONF.$O $LIBFILES > linker-log.txt
 
 install:V: i$CONF
         cp i$CONF $INSTALLDIR/i$CONF
 
 <../port/portmkfile
 
-main.$O: $ROOT/Inferno/$OBJTYPE/include/ureg.h
+CLEANEXTRA=csr.h csr.s
+
+csr.h csr.s: generate_csr.sh csrregs.h
+	sh generate_csr.sh
+
+csr.$O: csr.h csr.s
+
+trap.$O: csr.h
+
+main.$O: $ROOT/Inferno/$OBJTYPE/include/ureg.h csr.h
